@@ -1,0 +1,143 @@
+INVESTIGACION
+
+1._ CONCATENADO ELEMENTOS EN UNA TABLA
+
+Esta consulta me sirve para concatenar el nombre completo del usuario 
+
+SELECT
+	idusuario,
+    CONCAT(Nombre, Paterno, Materno) NombreCompleto
+FROM
+    usuarios
+ORDER BY
+    NombreCompleto;
+
+abre y la conexion manda a traer ala tabla de usuario
+selecciona los atributos que vas a utilizar en la consulta 
+y realiza la peticion que esta en la linea 3
+
+2._ como hacer que funcione el boton editar para una identificador que se repita en la tabla
+
+No me permite realizar modificacines en la base de datos ni 
+mucho menos en la pagina puede que la cardinalidad este mal echa
+
+3._ como saber que el identificador ya existe en la base de datos
+
+SELECT COUNT(*) 
+FROM usuarios
+WHERE idusuario = '57191900172';
+
+Esto me devuelve un 1 o un 0 entonces en el caso que de exista 
+el identificador devuelve 1 en caso contrario devuelve 0 es 
+puede funcionar para validar el id
+
+4._  Ajustar el contenido de la imagen
+
+CSS The object-fit Property
+img {
+  width: 200px;
+  height: 300px;
+  object-fit: cover;
+} 
+
+5._ Esta consulta me devuelve los 3 ISBN de los libros que mas se repiten en la base de datos 
+
+SELECT prestamos.libros_ISBN, 
+COUNT(prestamos.libros_ISBN) as num_usos 
+FROM prestamos 
+GROUP BY prestamos.libros_ISBN 
+ORDER BY num_usos DESC 
+LIMIT 3;
+
+6._ Esta consulta devuelve los titulos de libros mas resividos
+
+SELECT l.Titulo, COUNT(*) AS num_prestamos
+FROM prestamos p
+LEFT JOIN libros l ON l.ISBN = p.libros_ISBN
+GROUP BY l.Titulo
+ORDER BY num_prestamos DESC
+LIMIT 3;
+ 
+en este caso pasa el nombre de los usuarios que mas se repiten en la base de datos
+
+SELECT CONCAT(u.Nombre, ' ', u.Paterno, ' ', u.Materno) AS nombre_completo, COUNT(*) AS num_prestamos
+FROM prestamos p
+LEFT JOIN usuarios u ON u.idusuario = p.usuario_idusuario
+GROUP BY u.idusuario
+ORDER BY num_prestamos DESC
+LIMIT 3;
+
+7.  en este caso esta es una consulta que presenta a los alumnos que no han entregados libros
+
+SELECT DISTINCT usuario.idusuario, usuario.nombre, usuario.apellido FROM usuario 
+LEFT JOIN prestamos ON usuario.idusuario = prestamos.usuario_idusuario 
+WHERE prestamos.usuario_idusuario IS NULL OR prestamos.Devolucion IS NULL; 
+
+8.  que hace esta variable $matricula = $_SESSION["idusuario"]; 
+
+En este caso, es probable que la variable $_SESSION["idusaurio"] contenga la matrícula 
+o identificador único de un usuario que ha iniciado sesión en el sistema. La variable 
+$matricula puede estar siendo utilizada para hacer referencia a ese usuario en alguna 
+operación del sistema, como por ejemplo en una consulta a la base de datos para obtener 
+información específica del usuario.
+
+9._ ¿Como crear una funcion con php? 
+
+ - - - - - - - - - - - Enlaces - - - - - - - - - - -
+documentacion para usar el display: flex;
+http://www.mywonderland.es/curso_js/HTML/flex.html#:~:text=La%20propiedad%20de%20display%20flex,facilmente%20a%20los%20diferentes%20dispositivos.
+
+explicacion de ventanas modales y no modales: 
+https://webdesign.tutsplus.com/es/articles/modal-and-modeless-boxes-in-web-design--webdesign-2282
+
+¿que es?, ¿para que sirve? (npm):
+https://kinsta.com/es/base-de-conocimiento/que-es-npm/#:~:text=Este%20comando%20se%20utiliza%20para,cualquier%20directorio%20de%20nuestro%20ordenador.
+
+manejo de fechas con js: 
+https://www.freecodecamp.org/espanol/news/como-formatear-fechas-en-javascript-con-una-linea-de-codigo/
+
+---- AGREGAR CONTENIDO ----
+Respando para modificar 
+function editar(event, matricula) {
+    
+    var fila = event.target.parentNode.parentNode;
+    var celdas = fila.getElementsByTagName("td");
+
+    
+    var campos = ["tfMatricula", "tfISBN", "tfSalida", "tfDevolucion"];
+
+    for (var i = 0; i < celdas.length-3; i++) {
+        document.getElementById(campos[i]).value = celdas[i].innerHTML;
+    }
+
+    document.getElementById("btnGuardar").style.display = "none";
+    document.getElementById("btnModificar").style = "display: inline-block;";
+}
+
+PANTALLA DE CACELACION 
+https://www.youtube.com/watch?v=YnaGmLv-oVY
+
+EXPOCION EN CLASE DE SEGURIDAD 
+
+Logs
+
+nos permite observar los errores que pueda tener nuestro sitio web en el cPanel esta creada una carperta 
+la cual es llamada "logs" y en esa carperta se encuentran los errores que se puedan generar por los usuarios
+que llegan al sitio
+
++ hay herramientas que pueden detectar los logs 
+
+static application security testing (SAST)
+
+es una herramienta de seguridad utiliza para el desarrollo de software.
+
+las fallas criptograficas
+inlleciones 
+el diseño inseguro
+comprobar componentes bulnerables 
+fallas en software y entigredad de los datos
+falcificacion de solicitud
+
+SELECT CONCAT(Nombre, ' ', Materno, ' ', Paterno) nombre_completo, Titulo, MAX(Salida) Salida, MAX(Devolucion) Devolucion 
+FROM usuarios, libros, prestamos 
+WHERE Salida >= '2023-04-01' AND Salida <= '2023-04-05' GROUP BY Salida;
